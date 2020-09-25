@@ -1,7 +1,11 @@
 package ministore
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"time"
 )
 
@@ -14,10 +18,36 @@ const serviceCheckAuthURI = "/product/service/check_auth?component_access_token=
 // serviceListURI ..
 const serviceListURI = "/product/service/get_list?access_token=%v"
 
-// Request ..
-type Request struct {
-	URL string
+// Client ..
+type Client struct {
+	// URL         string
+	// AccessToken string
 }
+
+// Exec ..
+func (c *Client) exec(url string, req interface{}, rsp interface{}) error {
+	codec, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+	resp, err := http.Post(url, "application/json",
+		bytes.NewReader(codec))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(body, rsp)
+}
+
+func (c *Client) CheckAuth(req *CheckAuthReq) *CheckAuthRsp {
+
+}
+
+// CheckAuthReq.Exec(req,resp)
 
 // Response ..
 type Response struct {
@@ -91,4 +121,25 @@ type ServiceOrder struct {
 
 	SpecificationID string  `json:"specification_id"`
 	TotalPrice      float64 `json:"total_price"`
+}
+
+//CategoryListReq ..
+type CategoryListReq struct {
+	ParentCatID int `json:"f_cat_id"`
+}
+
+// Exec ..
+func (c *CategoryListReq) Exec(accessToken string) ([]*Category, error) {
+	url := fmt.Sprintf(serviceCheckAuthURI, accessToken)
+	fmt.Println(url)
+	//cat_list
+	var catList []*Category
+	return catList, nil
+}
+
+//Category ..
+type Category struct {
+	CatID       int    `json:"cat_id"`
+	ParentCatID int    `json:"f_cat_id"`
+	Name        string `json:"name"`
 }
