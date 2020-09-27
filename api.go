@@ -9,15 +9,6 @@ import (
 	"time"
 )
 
-// WxAPIHost ..
-const wxAPIHost = "https://api.weixin.qq.com"
-
-// serviceCheckAuthURI ..
-const serviceCheckAuthURI = "/product/service/check_auth?component_access_token=%v"
-
-// serviceListURI ..
-const serviceListURI = "/product/service/get_list?access_token=%v"
-
 // Client ..
 type Client struct {
 	// URL         string
@@ -43,19 +34,6 @@ func (c *Client) exec(url string, req interface{}, rsp interface{}) error {
 	return json.Unmarshal(body, rsp)
 }
 
-func (c *Client) CheckAuth(req *CheckAuthReq) *CheckAuthRsp {
-
-}
-
-// CheckAuthReq.Exec(req,resp)
-
-// Response ..
-type Response struct {
-	Errcode int    `json:"errcode"`
-	Errmsg  string `json:"errmsg"`
-	Data    interface{}
-}
-
 //CheckAuthReq 登录验证
 type CheckAuthReq struct {
 	Code string `json:"code"` //code	string	是	跳转码(小商店服务市场跳转到第三方url里面会带上code)
@@ -67,10 +45,19 @@ type CheckAuthRsp struct {
 	ServiceID int    `json:"service_id"`
 }
 
+// CheckAuthReq.Exec(req,resp)
+
+// Response ..
+type Response struct {
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+	Data    interface{}
+}
+
 // Exec ..
 func (c *CheckAuthReq) Exec(componentAccessToken string) (*CheckAuthRsp, error) {
 	url := fmt.Sprintf(serviceCheckAuthURI, componentAccessToken)
-	fmt.Println(url)
+	client.R().
 	return &CheckAuthRsp{}, nil
 }
 
