@@ -9,29 +9,27 @@ import (
 	"time"
 )
 
-// Client ..
-type Client struct {
-	// URL         string
-	// AccessToken string
-}
 
 // Exec ..
-func (c *Client) exec(url string, req interface{}, rsp interface{}) error {
-	codec, err := json.Marshal(req)
-	if err != nil {
-		return err
-	}
-	resp, err := http.Post(url, "application/json",
-		bytes.NewReader(codec))
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(body, rsp)
+// func (c *Client) exec(url string, req interface{}, rsp interface{}) error {
+// 	codec, err := json.Marshal(req)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	resp, err := http.Post(url, "application/json",
+// 		bytes.NewReader(codec))
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer resp.Body.Close()
+// 	body, err := ioutil.ReadAll(resp.Body)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return json.Unmarshal(body, rsp)
+// }
+func (c *Client) CheckAuth(ctx context.Context, uri string, body io.Reader) (*http.Response, error) {
+	return c.client.post(ctx,uri,body)
 }
 
 //CheckAuthReq 登录验证
